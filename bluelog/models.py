@@ -1,7 +1,9 @@
-# 一共四张表：Admin, Category, Post和Comment
+# 一共五张表：Admin, Category, Post, Comment和Link
 
 from datetime import datetime
 from bluelog.extensions import db
+
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # 管理员
 class Admin(db.Model):
@@ -12,6 +14,12 @@ class Admin(db.Model):
     blog_sub_title = db.Column(db.String(100))
     name = db.Column(db.String(30))
     about = db.Column(db.Text)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def validate_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 # 分类
 class Category(db.Model):
@@ -26,7 +34,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
     body = db.Column(db.Text)
-    timestamp = db.Clumn(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     # 和Category的双向关系
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
@@ -37,7 +45,7 @@ class Post(db.Model):
 
 # 评论
 class Comment(db.Model):
-    id = db.Column(db.Integer, primar_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     author = db.Column(db.String(30))
     email = db.Column(db.String(254))
     site = db.Column(db.String(255))
@@ -58,3 +66,8 @@ class Comment(db.Model):
     replies = db.relationship('Comment', back_populates='replied', cascade='all, delete-orphan') # 设置级联删除，即评论删除之后对应的回复也一并删除
     replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
 
+# 添加链接
+class Link(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30))
+    url = db.Column(db.String(255))

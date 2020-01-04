@@ -10,6 +10,13 @@
             </list>
           </settings>
         </remote-mappings>
+        <remote-mappings server-id="python@sftp://root@192.168.0.103:22/usr/bin/python">
+          <settings>
+            <list>
+              <mapping local-root="$PROJECT_DIR$" remote-root="/root/code/flask_Bluelog" />
+            </list>
+          </settings>
+        </remote-mappings>
       </list>
     </list>
   </component>

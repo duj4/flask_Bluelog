@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from bluelog.settings import config
 from bluelog.extensions import bootstrap, db, moment, ckeditor, mail
 from bluelog.fakes import fake_admin, fake_categories, fake_posts, fake_comments, fake_links
+from bluelog.models import Admin, Category, Post, Comment, Link
 
 # 使用工厂函数创建程序实例
 def create_app(config_name=None):
@@ -17,9 +18,9 @@ def create_app(config_name=None):
     register_extensions(app) # 注册扩展
     register_blueprints(app) # 注册蓝本
     register_commands(app) # 注册自定义shell命令
-    register_errors(app) # 注册错误处理函数
     register_shell_context(app) # 注册shell上下文处理函数
     register_template_context(app) # 注册模板上下文处理函数
+    register_errors(app)  # 注册错误处理函数
 
     return app
 
@@ -74,6 +75,20 @@ def register_commands(app):
 
         click.echo('Done!')
 
+def register_shell_context(app):
+    @app.shell_context_processor
+    def make_shell_context():
+        return dict(db=db)
+
+def register_template_context(app):
+    # 为了避免在每个视图函数中渲染模板时传入重复数据，在这个模板上下文处理函数中向模板上下文添加管理员对象变量
+    # 在多个页面中都包含的边栏中包含分类列表，也把分类数据传入到模板上下文中
+    @app.context_processor
+    def make_template_context():
+        admin = Admin.query.first()
+        categories = Category.query.order_by(Category.name).all()
+        return dict(admin=admin, categories=categories)
+
 def register_errors(app):
     @app.errorhandler(400)
     def bad_request(e):
@@ -86,11 +101,3 @@ def register_errors(app):
     @app.errorhandler(500)
     def bad_request(e):
         return render_template('errors/500.html'), 500
-
-def register_shell_context(app):
-    @app.shell_context_processor
-    def make_shell_context():
-        return dict(db=db)
-
-def register_template_context(app):
-    pass

@@ -1,0 +1,59 @@
+{% from 'bootstrap/nav.html' import render_nav_item %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>
+            {% block title %}{% endblock %} - Bluglog
+        </title>
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='css/%s.min.css' % request.cookies.get('theme', 'perfect_blue')) }}"
+              type="text/css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    {% endblock head %}
+</head>
+<body>
+    {% block nav %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    Bluelog
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav mr-auto">
+                        {{ render_nav_item('blog.index', 'Home') }}
+                        {{ render_nav_item('blog.about', 'About') }}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock nav %}
+    <main class="container">
+        <!--with_categories=True打开消息分类，这时会把消息迭代为一个类似于（分类，消息）的元组-->
+        {% for message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{{ message[0] }}" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message[1] }}
+            </div>
+        {% endfor %}
+        {% block content %}{% endblock content %}
+        {% block footer %}
+            <footer>This is footer.</footer>
+        {% endblock %}
+    </main>
+    {% block scripts %}
+        <script type="application/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.slim.min.js') }}"></script>
+        <script type="application/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+        <script type="application/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+        <script type="application/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
+        {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
+    {% endblock %}
+</body>
+</html>

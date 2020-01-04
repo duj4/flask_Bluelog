@@ -5,4 +5,11 @@
     <orderEntry type="jdk" jdkName="Remote Python 3.7.4 (sftp://root@192.168.0.103:22/usr/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="TemplatesService">
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/bluelog/templates" />
+      </list>
+    </option>
+  </component>
 </module>

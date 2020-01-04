@@ -3,11 +3,15 @@
     <words>
       <w>bluglog</w>
       <w>cham</w>
+      <w>endblock</w>
+      <w>endfor</w>
       <w>helloflask</w>
       <w>initdb</w>
       <w>kirigoe</w>
       <w>linkedin</w>
       <w>mima</w>
+      <w>navbar</w>
+      <w>toggler</w>
     </words>
   </dictionary>
 </component>

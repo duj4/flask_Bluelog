@@ -35,10 +35,10 @@ def register_extensions(app):
     moment.init_app(app)
 
 def register_blueprints(app):
-    # app.register_blueprint(blog_bp)
-    # app.register_blueprint(admin_bp, url_prefix='/admin')
-    # app.register_blueprint(auth_bp, url_prefix='/auth')
-    pass
+    app.register_blueprint(blog_bp)
+    app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+
 
 def register_commands(app):
     @app.cli.command()

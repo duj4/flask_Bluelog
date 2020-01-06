@@ -1,7 +1,7 @@
 from flask import render_template, Blueprint, request, current_app, url_for, flash, redirect
 from bluelog.models import Post, Category, Comment
 from bluelog.forms import AdminCommentForm, CommentForm
-from bluelog.emails import send_new_comment_email
+from bluelog.emails import send_new_comment_email, send_new_reply_email
 from bluelog.extensions import db
 
 blog_bp = Blueprint('blog', __name__)
@@ -66,6 +66,12 @@ def show_post(post_id):
         comment = Comment(
             author=author, email=email, site=site, body=body, from_admin=from_admin, post=post, reviewed=reviewed
         )
+        replied_id = request.args.get('reply')
+        # 如果请求URL的查询字符串中是否包含replied_id的值，如果包含，则表示提交的评论时一条回复
+        if replied_id:
+            replied_comment = Comment.query.get_or_404(replied_id)
+            comment.replied = replied_comment
+            send_new_reply_email(replied_comment)
         db.session.add(comment)
         db.session.commit()
 
@@ -76,3 +82,15 @@ def show_post(post_id):
             send_new_comment_email(post)
         return redirect(url_for('.show_post', post_id=post_id))
     return render_template('blog/post.html', post=post, pagination=pagination, comments=comments)
+
+@blog_bp.route('/reply/comment/<int:comment_id>')
+def reply_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    if not comment.post.can_comment:
+        flash('Comment is disabled.', 'warning')
+        return redirect(url_for('.show_post', post_id=comment.post.id))
+    return redirect(
+        # 当使用url_for()函数构建URL时，任何多余的关键字参数都会被自动转换为插叙字符串，当点击某个评论右侧的回复按钮时，重定向后的页面URL将会是:
+        # http://localhost:5000/post/23?id=4&author=peter#comment-form
+        url_for('.show_post', post_id=comment.post_id, reply=comment_id, author=comment.author) + '#comment-form'
+    )

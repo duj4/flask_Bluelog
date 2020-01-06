@@ -85,6 +85,7 @@
                                     {{ comment.body }}
                                 </p>
                                 <div class="float-right">
+                                    <!--回复按钮-->
                                     <a class="btn btn-light btn-sm" href="{{ url_for('.reply_comment', comment_id=comment.id)}}">
                                         Reply
                                     </a>
@@ -103,6 +104,12 @@
             {% if comments %}
                 <!--fragment用来向分页按钮的链接中添加URL片段，为的是单击分页按钮后跳转到页面的评论部分-->
                 {{ render_pagination(pagination, fragment='#comments') }}
+            {% endif %}
+            {% if request.args.get('reply') %}
+                <div class="alert alert-dark">
+                    Reply to <strong>{{ request.args.get('author') }}</strong>:
+                    <a class="float-right" href="{{ url_for('.show_post', post_id=post.id)}}">Cancel</a>
+                </div>
             {% endif %}
         </div>
         <div class="col-sm-4 sidebar">

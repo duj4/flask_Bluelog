@@ -38,7 +38,7 @@ def register_blueprints(app):
     app.register_blueprint(blog_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(auth_bp, url_prefix='/auth')
-
+    
 
 def register_commands(app):
     @app.cli.command()
@@ -74,6 +74,42 @@ def register_commands(app):
         fake_comments(comment)
 
         click.echo('Done!')
+
+    @app.cli.command()
+    @click.option('--username', prompt=True, help='The username used to login.')
+    @click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True, help='The password to login.')
+    def init(username, password):
+        """Building Bluelog, just for you."""
+        click.echo('Initializing the database...')
+        db.create_all()
+        admin = Admin.query.first()
+
+        # 如果数据库中已经有管理员记录就更新用户名和密码
+        if admin:
+            click.echo('The administrator already exists, updating...')
+            admin.username =  username
+            admin.set_password(password)
+        # 若不存在则直接创建
+        else:
+            click.echo('Creating the temporary administrator account...')
+            admin = Admin(
+                username=username,
+                blog_title='Bluelog',
+                blog_sub_title='No, I\'m the real thing.',
+                name='Admin',
+                about='Anything about you.'
+            )
+            admin.set_password(password)
+            db.session.add(admin)
+
+        category = Category.query.first()
+        if category is None:
+            click.echo('Creating the default category...')
+            category = Category(name='Default')
+            db.session.add(category)
+
+        db.session.commit()
+        click.echo('Done.')
 
 def register_shell_context(app):
     @app.shell_context_processor

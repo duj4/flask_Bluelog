@@ -30,6 +30,53 @@
                         {{ render_nav_item('blog.index', 'Home') }}
                         {{ render_nav_item('blog.about', 'About') }}
                     </ul>
+                    <!--管理快捷入口-->
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if current_user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    New
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ url_for('admin.new_post') }}">
+                                        Post
+                                    </a>
+                                    <a class="dropdown-item" href="{{ url_for('admin.new_category') }}">
+                                        Category
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Manage
+                                    <span class="caret"></span>
+                                    <!--Manage按钮的文本中，如果有unread_comments，就渲染一个new标记
+                                        unread_comments存储了待审核评论的数量
+                                    -->
+                                    {% if unread_comments %}
+                                        <span class="badge badge-success">new</span>
+                                    {% endif %}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ url_for('admin.manage_post') }}">
+                                        Post
+                                    </a>
+                                    <a class="dropdown-item" href="{{ url_for('admin.manage_category') }}">
+                                        Category
+                                    </a>
+                                    <a class="dropdown-item" href="{{ url_for('admin.manage_comment') }}">
+                                        Comment
+                                        <!--Comment链接中，如果unread_comments不为0，就渲染出待审核的评论数量标记-->
+                                        {% if unread_comments %}
+                                            <span class="badge badge-success">{{ unread_comments }}</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </li>
+                            {{ render_nav_item('admin.settings', 'Settings') }}
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </nav>

@@ -1,12 +1,13 @@
 # 一共五张表：Admin, Category, Post, Comment和Link
 
 from datetime import datetime
+from flask_login import UserMixin
 from bluelog.extensions import db
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # 管理员
-class Admin(db.Model):
+class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20))
     password_hash = db.Column(db.String(128)) # 密码散列值

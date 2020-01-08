@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+    <div class="container h-100">
+        <div class="row h-100 page-header justify-content-center align-items-center">
+            <h1>Log In</h1>
+        </div>
+        <div class="row h-100 justify-content-center align-items-center">
+            {{ render_form(form, extra_classes='col-6') }}
+        </div>
+    </div>
+{% endblock %}
+
+<!--不打算再登录页面显示footer，由于在base.html中已经加入了footer块，所以在登录页面模板只需要定义这个块并留空就可以覆盖base.html中的对应内容-->
+{% block footer %}
+{% endblock %}

@@ -92,13 +92,7 @@ def register_commands(app):
         # 若不存在则直接创建
         else:
             click.echo('Creating the temporary administrator account...')
-            admin = Admin(
-                username=username,
-                blog_title='Bluelog',
-                blog_sub_title='No, I\'m the real thing.',
-                name='Admin',
-                about='Anything about you.'
-            )
+            admin = Admin(username=username, blog_title='Bluelog', blog_sub_title='No, I\'m the real thing.', name='Admin', about='Anything about you.')
             admin.set_password(password)
             db.session.add(admin)
 

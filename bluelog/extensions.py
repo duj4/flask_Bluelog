@@ -12,6 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
+from bluelog.models import Admin
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
@@ -22,3 +23,15 @@ mail = Mail()
 moment = Moment()
 toolbar = DebugToolbarExtension()
 migrate = Migrate()
+
+# 接收用户id作为参数，返回对应的用户对象
+# 当调用current_user时，Flask-Login会调用用户加载函数并返回对应的用户对象
+# 如果当前用户已经登录，会返回Admin类实例；如果用户未登录，current_user默认会返回Flask-Login内置的AnonymousUserMixin类对象
+@login_manager.user_loader
+def load_user(user_id):
+    user = Admin.query.get(int(user_id))
+    return user
+
+login_manager.login_view = 'auth.login'
+login_manager.login_message = 'Please login to access this page!'
+login_manager.login_message_category = 'warning'

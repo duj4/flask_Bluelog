@@ -3,6 +3,7 @@ from bluelog.models import Post, Category, Comment
 from bluelog.forms import AdminCommentForm, CommentForm
 from bluelog.emails import send_new_comment_email, send_new_reply_email
 from bluelog.extensions import db
+from bluelog.utils import redirect_back
 
 blog_bp = Blueprint('blog', __name__)
 

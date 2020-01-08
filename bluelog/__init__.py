@@ -1,8 +1,9 @@
 import os
 import click
 from flask import Flask, render_template
+from flask_wtf.csrf import CSRFError
 from bluelog.settings import config
-from bluelog.extensions import bootstrap, db, moment, ckeditor, mail
+from bluelog.extensions import bootstrap, db, csrf, moment, ckeditor, mail
 from bluelog.fakes import fake_admin, fake_categories, fake_posts, fake_comments, fake_links
 from bluelog.models import Admin, Category, Post, Comment, Link
 
@@ -30,6 +31,7 @@ def register_logging(app):
 def register_extensions(app):
     bootstrap.init_app(app)
     db.init_app(app)
+    csrf.init_app(app)
     ckeditor.init_app(app)
     mail.init_app(app)
     moment.init_app(app)
@@ -131,3 +133,7 @@ def register_errors(app):
     @app.errorhandler(500)
     def bad_request(e):
         return render_template('errors/500.html'), 500
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        return render_template('errors/400.html', description=e.description), 400

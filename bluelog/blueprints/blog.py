@@ -1,4 +1,5 @@
 from flask import render_template, Blueprint, request, current_app, url_for, flash, redirect, abort, make_response
+from flask_login import current_user
 from bluelog.models import Post, Category, Comment
 from bluelog.forms import AdminCommentForm, CommentForm
 from bluelog.emails import send_new_comment_email, send_new_reply_email

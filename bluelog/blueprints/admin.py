@@ -48,3 +48,12 @@ def edit_post(post_id):
     form.body.data = post.body
     form.category.data = post.category_id
     return render_template('admin/edit_post.html', form=form)
+
+@admin_bp.route('/post/<int:post_id>/delete', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Post deleted.', 'success')
+    return redirect_back()

@@ -30,6 +30,14 @@ class Category(db.Model):
     # 和Post的双向关系
     posts = db.relationship('Post', back_populates='category')
 
+    def delete(self):
+        default_category = Category.query.get(1)
+        posts = self.posts[:]
+        # 把当前分类下的所有文章都归类到默认分类
+        for post in posts:
+            post.category = default_category
+        db.session.delete(self)
+        db.session.commit()
 # 文章
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)

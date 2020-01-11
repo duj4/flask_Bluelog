@@ -58,6 +58,7 @@ def delete_post(post_id):
     flash('Post deleted.', 'success')
     return redirect_back()
 
+# 开关评论
 @admin_bp.route('/post/<int:post_id>/set_comment', methods=['POST'])
 @login_required
 def set_comment(post_id):
@@ -70,3 +71,29 @@ def set_comment(post_id):
         flash('Comment enabled.', 'success')
     db.session.commit()
     return redirect_back()
+
+@admin_bp.route('/comment/<int:comment_id>/approve', methods=['POST'])
+@login_required
+def approve_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    comment.reviewed = True
+    db.session.commit()
+    flash('Comment published.', 'success')
+    return redirect_back()
+
+@admin_bp.route('/comment/manage')
+@login_required
+def manage_comment():
+    filter_rule = request.args.get('filter', 'all')
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
+    if filter_rule == 'unread':
+        filtered_comments = Comment.query.filter_by(reviewed=False)
+    elif filter_rule == 'admin':
+        filtered_comments = Comment.query.filter_by(from_admin=True)
+    else:
+        filtered_comments = Comment.query
+
+    pagination = filtered_comments.order_by(Comment.timestamp.desc().paginate(page, per_page=per_page))
+    comments = pagination.items
+    return render_template('admin/manage_comment.html', comments=comments, pagination=pagination)

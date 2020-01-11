@@ -57,3 +57,16 @@ def delete_post(post_id):
     db.session.commit()
     flash('Post deleted.', 'success')
     return redirect_back()
+
+@admin_bp.route('/post/<int:post_id>/set_comment', methods=['POST'])
+@login_required
+def set_comment(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.can_comment:
+        post.can_comment = False
+        flash('Comment disabled.', 'success')
+    else:
+        post.can_comment = True
+        flash('Comment enabled.', 'success')
+    db.session.commit()
+    return redirect_back()

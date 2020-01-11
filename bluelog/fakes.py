@@ -36,7 +36,7 @@ def fake_posts(count = 50):
     for i in range(count):
         post = Post(
             title = fake.sentence(),
-            body = fake.text(200),
+            body = fake.text(2000),
             # 文章分类在1-分类总数之间随机取值
             category = Category.query.get(random.randint(1, Category.query.count())),
             timestamp = fake.date_time_this_year()
@@ -58,7 +58,6 @@ def fake_comments(count = 500):
         db.session.add(comment)
 
     salt = int(count * 0.1)
-
     for i in range(salt):
         # 未审核的评论
         comment = Comment(
@@ -74,9 +73,9 @@ def fake_comments(count = 500):
 
         # 管理员发表的评论
         comment = Comment(
-            author = fake.name(),
-            email = fake.email(),
-            site = fake.url(),
+            author = 'Mima Kirigoe',
+            email = '328185556@qq.com',
+            site = 'qq.com',
             body = fake.sentence(),
             timestamp = fake.date_time_this_year(),
             from_admin = True,
@@ -106,5 +105,5 @@ def fake_links():
     facebook = Link(name='Facebook', url='#')
     linkedin = Link(name='LinkedIn', url='#')
     google = Link(name='Google+', url='#')
-    db.session.add([twitter, facebook, linkedin, google])
+    db.session.add_all([twitter, facebook, linkedin, google])
     db.session.commit()

@@ -13,7 +13,6 @@ from flask_wtf import CSRFProtect
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 
-
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 login_manager = LoginManager()

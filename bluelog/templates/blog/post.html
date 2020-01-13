@@ -70,7 +70,7 @@
                     {% if current_user.is_authenticated %}
                         <form class="float-right" method="post"
                               action="{{ url_for('admin.set_comment', post_id=post.id, next=request.full_path) }}">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                             <button type="submit" class="btn btn-warning btn-sm">
                                 {% if post.can_comment %}
                                     Disable
@@ -118,7 +118,7 @@
                                 </p>
                                 <div class="float-right">
                                     <!--回复按钮-->
-                                    <a class="btn btn-light btn-sm" href="{{ url_for('.reply_comment', comment_id=comment.id)}}">
+                                    <a class="btn btn-light btn-sm" href="{{ url_for('.reply_comment', comment_id=comment.id) }}">
                                         Reply
                                     </a>
                                     {% if current_user.is_authenticated %}

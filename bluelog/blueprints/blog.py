@@ -1,5 +1,6 @@
 from flask import render_template, Blueprint, request, current_app, url_for, flash, redirect, abort, make_response
 from flask_login import current_user
+
 from bluelog.models import Post, Category, Comment
 from bluelog.forms import AdminCommentForm, CommentForm
 from bluelog.emails import send_new_comment_email, send_new_reply_email
@@ -101,7 +102,8 @@ def reply_comment(comment_id):
 def change_theme(theme_name):
     if theme_name not in current_app.config['BLUELOG_THEMES'].keys():
         abort(404)
-    response = make_response(redirect_back()) # 重定向到上衣页面
+
+    response = make_response(redirect_back()) # 重定向到上一页面
     # 将主题保存在名为theme的cookie中，30天
     response.set_cookie('theme', theme_name, max_page=30*24*60*60)
     return response

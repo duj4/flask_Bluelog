@@ -84,7 +84,7 @@ def show_post(post_id):
             flash('Thanks, your comment will be published after reviewed.', 'info')
             send_new_comment_email(post)
         return redirect(url_for('.show_post', post_id=post_id))
-    return render_template('blog/post.html', post=post, pagination=pagination, comments=comments)
+    return render_template('blog/post.html', post=post, pagination=pagination, form=form, comments=comments)
 
 @blog_bp.route('/reply/comment/<int:comment_id>')
 def reply_comment(comment_id):
@@ -105,5 +105,5 @@ def change_theme(theme_name):
 
     response = make_response(redirect_back()) # 重定向到上一页面
     # 将主题保存在名为theme的cookie中，30天
-    response.set_cookie('theme', theme_name, max_page=30*24*60*60)
+    response.set_cookie('theme', theme_name, max_age=30*24*60*60)
     return response

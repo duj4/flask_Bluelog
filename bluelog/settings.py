@@ -28,11 +28,15 @@ class BaseConfig(object):
 
     BLUELOG_EMAIL = os.getenv('BLUELOG_EMAIL')
     BLUELOG_POST_PER_PAGE = 10
+    BLUELOG_COMMENT_PER_PAGE = 15
     BLUELOG_MANAGE_POST_PER_PAGE = 15
     BLUELOG_COMMIT_PER_PAGE = 15
 
     # ('theme name', 'display name')
     BLUELOG_THEMES = {'perfect_blue': 'Perfect Blue', 'black_swan': 'Black Swan'}
+
+    # Debug Toolbar
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data-dev.db')

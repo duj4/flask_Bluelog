@@ -106,7 +106,7 @@
                             </a>
                         <!--如果没有登录，则显示login链接-->
                         {% else %}
-                            <a href="{{ url_for('auth.login', next=request.full_path)_}}">
+                            <a href="{{ url_for('auth.login', next=request.full_path) }}">
                                 Login
                             </a>
                         {% endif %}

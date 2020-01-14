@@ -103,7 +103,7 @@ def manage_comment():
     else:
         filtered_comments = Comment.query
 
-    pagination = filtered_comments.order_by(Comment.timestamp.desc().paginate(page, per_page=per_page))
+    pagination = filtered_comments.order_by(Comment.timestamp.desc()).paginate(page, per_page=per_page)
     comments = pagination.items
     return render_template('admin/manage_comment.html', comments=comments, pagination=pagination)
 
